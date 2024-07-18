@@ -11,8 +11,9 @@ import router from '@adonisjs/core/services/router'
 import User from '#models/user'
 const SessionController = () => import('#controllers/session_controller')
 const RegisterController = () => import('#controllers/auth/register_controller')
+const CategoriesController = () => import('#controllers/categories_controller')
+const LogsController = () => import('#controllers/logs_controller')
 import { middleware } from '#start/kernel'
-
 router.get('/', async () => {
   return {
     hello: 'world',
@@ -21,14 +22,12 @@ router.get('/', async () => {
 
 router.post('login', [SessionController, 'store'])
 
-router.get('posts', () => {
-  return {
-    success: true,
-  }
-}).use([middleware.auth()])
+router.get('categories', [CategoriesController, 'index']).use([middleware.auth()])
 
+router.get('logs/:id', [LogsController, 'index']).use([middleware.auth()])
+router.post('logs', [LogsController, 'store']).use([middleware.auth()])
 
-router.post('users/:id/tokens', async ({ params }) => {
+router.get('posts/:id/', async ({ params }) => {
   const user = await User.findOrFail(params.id)
   const token = await User.accessTokens.create(user)
 
@@ -37,6 +36,7 @@ router.post('users/:id/tokens', async ({ params }) => {
     value: token.value!.release(),
   }
 })
+
 
 router.group(() => {
   router.post('/register', [RegisterController, 'store'])

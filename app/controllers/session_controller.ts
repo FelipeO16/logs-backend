@@ -2,6 +2,8 @@ import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import hash from '@adonisjs/core/services/hash'
 
+
+
 export default class SessionController {
   /**
    * Display a list of resource
@@ -24,14 +26,20 @@ export default class SessionController {
      * not exists
      */
     const user = await User.findBy('email', email)
+    
     if (!user) {
+      response.abort('Invalid credentials')
+    }
+
+    // console.log(user.password)
+    const data = await hash.verify(user.password, password)
+    if (!data) {
       response.abort('Invalid credentials')
     }
     const token = await User.accessTokens.create(user)
     /**
      * Verify the password using the hash service
      */
-    await hash.verify(user.password, password)
 
     /**
      * Now login the user or create a token for them

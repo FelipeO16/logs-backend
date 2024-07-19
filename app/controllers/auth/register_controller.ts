@@ -5,7 +5,10 @@ import User from '#models/user'
 export default class RegisterController {
   async store({ request }: HttpContext) {
     const data = await request.validateUsing(registerValidator)
-    const user = await User.create(data)
-    return user
+    if (data.token === 'flp1612') {
+      const user = await User.create(data)
+      return user
+    }
+    return { message: 'Invalid token', error: 'Invalid token' }
   }
 }

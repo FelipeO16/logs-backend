@@ -6,14 +6,9 @@ export default class LogsController {
   /**
    * Display a list of resource
    */
-  async index({ request, params }: HttpContext) {
-    console.log(params.id)
-    console.log(request.all().category)
-    // find log by category and user_id
-    const logs = await Log.query()
-      .where('category', request.all().category)
-      .where('user_id', params.id)
-    return logs
+  async index({}: HttpContext) {
+    const logs = await Log.all()
+    return { logs }
   }
 
   /**
@@ -33,7 +28,15 @@ export default class LogsController {
   /**
    * Show individual record
    */
-  async show({ params }: HttpContext) {}
+  async show({ request, params }: HttpContext) {
+    console.log(params.id)
+    console.log(request.all().category)
+    // find log by category and user_id
+    const logs = await Log.query()
+      .where('category', request.all().category)
+      .where('user_id', params.id)
+    return logs
+  }
 
   /**
    * Edit individual record

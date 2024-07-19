@@ -24,7 +24,8 @@ router.post('login', [SessionController, 'store'])
 
 router.get('categories', [CategoriesController, 'index']).use([middleware.auth()])
 
-router.get('logs/:id', [LogsController, 'index']).use([middleware.auth()])
+router.get('logs/:id', [LogsController, 'show']).use([middleware.auth()])
+router.get('logs', [LogsController, 'index']).use([middleware.auth()])
 router.post('logs', [LogsController, 'store']).use([middleware.auth()])
 
 router.get('posts/:id/', async ({ params }) => {

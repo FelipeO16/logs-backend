@@ -8,7 +8,9 @@ export default class CategoriesController {
    */
   async index({}: HttpContext) {
     const logs = await Log.all()
-    return logs
+    const categories = logs.map((log) => log.category)
+    console.log(categories)
+    return { categories }
   }
 
   /**

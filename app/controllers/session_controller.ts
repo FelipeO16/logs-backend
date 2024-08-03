@@ -30,8 +30,6 @@ export default class SessionController {
     if (!user) {
       response.abort('Invalid credentials')
     }
-
-    // console.log(user.password)
     const data = await hash.verify(user.password, password)
     if (!data) {
       response.abort('Invalid credentials')

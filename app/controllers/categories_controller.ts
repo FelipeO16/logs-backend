@@ -14,8 +14,6 @@ export default class CategoriesController {
       name: category,
       label: category,
     }))
-
-    console.log(categoriesObject)
     return { categories: categoriesObject }
   }
 

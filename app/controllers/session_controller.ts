@@ -2,8 +2,6 @@ import { HttpContext } from '@adonisjs/core/http'
 import User from '#models/user'
 import hash from '@adonisjs/core/services/hash'
 
-
-
 export default class SessionController {
   /**
    * Display a list of resource
@@ -26,15 +24,14 @@ export default class SessionController {
      * not exists
      */
     const user = await User.findBy('email', email)
-    
     if (!user) {
       response.abort('Invalid credentials')
     }
-    const data = await hash.verify(user.password, password)
+    const data = user ? await hash.verify(user.password, password) : false
     if (!data) {
       response.abort('Invalid credentials')
     }
-    const token = await User.accessTokens.create(user)
+    const token = user ? await User.accessTokens.create(user) : false
     /**
      * Verify the password using the hash service
      */
@@ -45,28 +42,9 @@ export default class SessionController {
 
     return {
       success: true,
-      user: user.serialize(),
-      token: token.value!.release(),
+      user: user?.serialize(),
+      token: token !== false ? token.value!.release() : null,
     }
   }
 
-  /**
-   * Show individual record
-   */
-  async show({ params }: HttpContext) {}
-
-  /**
-   * Edit individual record
-   */
-  async edit({ params }: HttpContext) {}
-
-  /**
-   * Handle form submission for the edit action
-   */
-  async update({ params, request }: HttpContext) {}
-
-  /**
-   * Delete record
-   */
-  async destroy({ params }: HttpContext) {}
 }

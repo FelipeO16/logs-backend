@@ -1,7 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import Log from '#models/log'
 
-
 export default class CategoriesController {
   /**
    * Display a list of resource
@@ -9,8 +8,15 @@ export default class CategoriesController {
   async index({}: HttpContext) {
     const logs = await Log.all()
     const categories = logs.map((log) => log.category)
-    console.log(categories)
-    return { categories }
+    const uniqueCategories = [...new Set(categories)]
+
+    const categoriesObject = uniqueCategories.map((category) => ({
+      name: category,
+      label: category,
+    }))
+
+    console.log(categoriesObject)
+    return { categories: categoriesObject }
   }
 
   /**

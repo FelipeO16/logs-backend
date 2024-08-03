@@ -8,6 +8,9 @@ export default class LogsController {
    */
   async index({}: HttpContext) {
     const logs = await Log.all()
+    logs.forEach((log) => {
+      log.createdAt = log.createdAt.toLocaleString()
+    })
     return { logs }
   }
 
@@ -28,14 +31,16 @@ export default class LogsController {
   /**
    * Show individual record
    */
-  async show({ request, params }: HttpContext) {
+  async show({ params }: HttpContext) {
     console.log(params.id)
-    console.log(request.all().category)
+    console.log(params.category)
     // find log by category and user_id
-    const logs = await Log.query()
-      .where('category', request.all().category)
-      .where('user_id', params.id)
-    return logs
+    const logs = await Log.query().where('category', params.category).where('user_id', params.id)
+    //format date of createdAt
+    logs.forEach((log) => {
+      log.createdAt = log.createdAt.toLocaleString()
+    })
+    return { logs }
   }
 
   /**
